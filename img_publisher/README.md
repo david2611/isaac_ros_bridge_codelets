@@ -26,7 +26,9 @@ Isaac parameters
 
 Setup
 -----
-This codelet requires use of the `cv_bridge` and `image_transport` packages not available in the base Isaac installation.
+If you have followed steps 1., 2., and 3. of the main setup instructions for this repo then nothing further is required.
+
+This codelet requires use of the `cv_bridge` and `image_transport` packages not available in the base Isaac installation. If you did not complete step 3. of the main setup instructions you will need to include these packages in your Isaac ROS setup.
 
 To include these packages complete the following:
 1. Update `PACKAGES` parameter in `engine/build/scripts/ros_package_generation.sh` of your isaac_sdk installation 
