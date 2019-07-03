@@ -1,0 +1,55 @@
+{
+  "name": "carter_s",
+  "config_files": [
+    "apps/carter_sim/navigation.config.json",
+    "apps/carter_sim/carter.config.json"
+  ],
+  "graph_files": [
+    "apps/carter_sim/navigation.graph.json",
+    "apps/carter_sim/carter.graph.json"
+  ],
+  "modules": [
+    "map",
+    "navigation",
+    "perception",
+    "planner",
+    "viewers",
+    "flatsim",
+    "isaac_ros_bridge_codelets/twist_subscriber:ros_twist_sub_components"
+  ],
+  "config": {
+    "ros_move_bridge":
+    {   
+        "ros_move_bridge":
+        {
+            "tick_period": "30Hz"
+        }
+    }
+  
+  },
+  "graph": {
+    "nodes": [
+      {
+        "name": "ros_move_bridge",
+        "components": [
+          {
+            "name": "message_ledger",
+            "type": "isaac::alice::MessageLedger"
+          },
+          {
+            "name": "ros_move_bridge",
+            "type": "isaac::rosbridge::MovementRosBridge"
+          }
+        ]
+      }
+    ],
+    "edges": [
+        {
+            "source": "ros_move_bridge/ros_move_bridge/base_cmd",
+            "target": "base_simulation/isaac.flatsim.DifferentialBaseSimulator/diff_base_command"
+        }
+    ]
+  }
+}
+
+
