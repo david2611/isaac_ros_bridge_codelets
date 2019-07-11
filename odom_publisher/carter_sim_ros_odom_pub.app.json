@@ -1,0 +1,79 @@
+{
+  "name": "carter_sim",
+  "config_files": [
+    "apps/carter_sim/navigation.config.json",
+    "apps/carter_sim/carter.config.json",
+    "apps/carter_sim/joystick.config.json"
+  ],
+  "graph_files": [
+    "apps/carter_sim/navigation.graph.json",
+    "apps/carter_sim/carter.graph.json",
+    "apps/carter_sim/joystick.graph.json"
+  ],
+  "modules": [
+    "map",
+    "navigation",
+    "perception",
+    "planner",
+    "viewers",
+    "flatsim",
+    "sensors:joystick",
+    "//isaac_ros_bridge_codelets/odom_publisher:ros_odom_pub_components"
+  ],
+  "config": {
+    "base_odometry" : {
+      "base_odometry" : {
+        "tick_period" : "30Hz"
+      }
+    },
+    "ros_odometry_publisher" : {
+      "ros_odometry_publisher" : {
+        "tick_period" : "1Hz"
+      }
+    }
+  },
+  "graph": {
+    "nodes": [
+      {
+        "name": "base_odometry",
+        "components":[
+          {
+            "name": "message_ledger",
+            "type": "isaac::alice::MessageLedger"
+          },
+          {
+            "name": "base_odometry",
+            "type": "isaac::navigation::DifferentialBaseOdometry"
+          }
+        ]
+      },
+      {
+        "name": "ros_odometry_publisher",
+        "components": [
+          {
+            "name": "message_ledger",
+            "type": "isaac::alice::MessageLedger"
+          },
+          {
+            "name": "ros_odometry_publisher",
+            "type": "isaac::rosbridge::OdometryRosBridge"
+          }
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "source": "control/isaac.planner.DifferentialBaseControl/cmd",
+        "target": "base_simulation/isaac.flatsim.DifferentialBaseSimulator/diff_base_command"
+      },
+      {
+        "source": "base_simulation/isaac.flatsim.DifferentialBaseSimulator/diff_base_state",
+        "target": "base_odometry/base_odometry/state"
+      },
+      {
+        "source": "base_odometry/base_odometry/odometry",
+        "target": "ros_odometry_publisher/ros_odometry_publisher/odometry"
+      }
+    ]
+  }
+}
