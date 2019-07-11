@@ -72,7 +72,7 @@ to read:
     ```
     PACKAGES="roscpp rospy actionlib_msgs control_msgs diagnostic_msgs geometry_msgs
      map_msgs nav_msgs pcl_msgs sensor_msgs shape_msgs std_msgs stereo_msgs
-     tf2_geometry_msgs tf2_msgs trajectory_msgs visualization_msgs cv_bridge image_transport"
+     tf2_geometry_msgs tf2_msgs trajectory_msgs visualization_msgs cv_bridge image_transport, tf"
     ```
 
 2. Run `engine/build/scripts/ros_package_generation.sh <distro> <package_name>`
