@@ -8,6 +8,15 @@
 // package to enable broadcasting of transforms in ROS
 #include "tf/transform_broadcaster.h"
 
+int get_sign(float number){
+  // not good code, for 0 should return zero but for my needs should work fine
+  if (number >= 0){
+    return 1;
+  } else {
+    return -1;
+  }
+}
+
 namespace isaac {
 namespace rosbridge {
 
@@ -53,9 +62,9 @@ void OdometryRosBridge::tick() {
   std::string odometry_frame = proto_reader.getOdometryFrame().cStr();
   std::string robot_frame = proto_reader.getRobotFrame().cStr();
 
-  // print contents of odometry message to understand it
-  
-  // print Transform
+  // print contents of odometry message to understand it (debugging only)
+  if (get_print_isaac_odometry()){
+    // print Transform
   std::cout << "odomTRobot: Translation - [ " << odom_tf_translation.getX();
   std::cout << ", " << odom_tf_translation.getY() << " ]\n";
   // NOTE need to adjust rotation to get degrees, this is just the raw stored data
@@ -70,10 +79,12 @@ void OdometryRosBridge::tick() {
   // Print frames
   std::cout << "odometry_frame: " << odometry_frame << "\n";
   std::cout << "robot_frame: " << robot_frame << "\n";
-
+  }
+  
   // get the rotation angle (theta) from Isaac as inverse cosine of X element of SO2dProto
   // Could also use inverse sine of Y element of S02dProto (see SO2dProto documentation)
-  float rotation_angle = std::acos(odom_tf_rotation.getQ().getX());
+  float rotation_angle = std::abs(std::acos(odom_tf_rotation.getQ().getX())) * get_sign(std::asin(odom_tf_rotation.getQ().getY()));
+  std::cout << "rotation_angle: " << (360*rotation_angle)/(2*3.14159262) << "\n";
   
   // Calculate Quaternion message needed for odometry in ROS
   geometry_msgs::Quaternion ros_odom_quat = tf::createQuaternionMsgFromYaw(rotation_angle);
@@ -82,8 +93,8 @@ void OdometryRosBridge::tick() {
   geometry_msgs::TransformStamped ros_odom_tf;
   ros_odom_tf.header.stamp = ros_time_now;
   // TODO UPDATE to make these ISAAC_PARAMs
-  ros_odom_tf.header.frame_id = "odom";
-  ros_odom_tf.child_frame_id = "base_link";
+  ros_odom_tf.header.frame_id = get_ros_header_frame();
+  ros_odom_tf.child_frame_id = get_ros_child_frame();
 
   ros_odom_tf.transform.translation.x = odom_tf_translation.getX();
   ros_odom_tf.transform.translation.y = odom_tf_translation.getY();
@@ -96,8 +107,7 @@ void OdometryRosBridge::tick() {
   nav_msgs::Odometry ros_odom;
   // create header
   ros_odom.header.stamp = ros_time_now;
-  // TODO UPDATE to make this ISAAC_PARAM
-  ros_odom.header.frame_id = "odom";
+  ros_odom.header.frame_id = get_ros_header_frame();
  
   // set position
   ros_odom.pose.pose.position.x = odom_tf_translation.getX();
@@ -106,8 +116,7 @@ void OdometryRosBridge::tick() {
   ros_odom.pose.pose.orientation = ros_odom_quat; 
 
   // set velocity
-  // TODO UPDATE to make this ISAAC_PARAM
-  ros_odom.child_frame_id = "base_link";
+  ros_odom.child_frame_id = get_ros_child_frame();
   ros_odom.twist.twist.linear.x = speed.getX();
   ros_odom.twist.twist.linear.y = speed.getY();
   ros_odom.twist.twist.angular.z = angular_speed;

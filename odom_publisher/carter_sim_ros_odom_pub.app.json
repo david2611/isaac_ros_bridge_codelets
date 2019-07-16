@@ -28,7 +28,9 @@
     },
     "ros_odometry_publisher" : {
       "ros_odometry_publisher" : {
-        "tick_period" : "1Hz"
+        "tick_period" : "1Hz",
+        "ros_header_frame": "odom",
+        "print_isaac_odometry": true
       }
     }
   },

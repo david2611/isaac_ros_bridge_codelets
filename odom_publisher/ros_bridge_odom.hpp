@@ -32,6 +32,17 @@ class OdometryRosBridge : public alice::Codelet {
   // ROS publisher channel. Used to broadcast messages to ROS
   ISAAC_PARAM(std::string, ros_publisher_channel_name, "isaac_odometry");
 
+  // Parameter for setting ROS header frame name
+  ISAAC_PARAM(std::string, ros_header_frame, "odom");
+
+  // Parameter for setting ROS child frame name
+  ISAAC_PARAM(std::string, ros_child_frame, "base_link");
+
+  // Parameter for if odometry information should be printed (should default to false)
+  ISAAC_PARAM(bool, print_isaac_odometry, false);
+
+  // ISAAC_PARAM(std::list<float>, )
+
  private:
   // Hide the ROS implementation details
   struct RosOdometryData;
