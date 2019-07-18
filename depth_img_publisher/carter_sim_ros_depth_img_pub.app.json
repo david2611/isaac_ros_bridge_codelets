@@ -1,0 +1,54 @@
+{
+  "name": "carter_sim",
+  "config_files": [
+    "apps/carter_sim/navigation.config.json",
+    "apps/carter_sim/carter.config.json"
+  ],
+  "graph_files": [
+    "apps/carter_sim/navigation.graph.json",
+    "apps/carter_sim/carter.graph.json"
+  ],
+  "modules": [
+    "map",
+    "navigation",
+    "perception",
+    "planner",
+    "viewers",
+    "flatsim",
+    "//isaac_ros_bridge_codelets/depth_img_publisher:ros_depth_img_pub_components"
+  ],
+  "config": {
+    "left_img_bridge" : {
+      "img_bridge" : {
+        "tick_period" : "30Hz"
+      }
+    }
+  },
+  "graph": {
+    "nodes": [
+      {
+        "name": "left_cam_depth_img_bridge",
+        "components": [
+          {
+            "name": "message_ledger",
+            "type": "isaac::alice::MessageLedger"
+          },
+          {
+            "name": "depth_img_bridge",
+            "type": "isaac::rosbridge::opencv::DepthImageRosBridge"
+          }
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "source": "control/isaac.planner.DifferentialBaseControl/cmd",
+        "target": "base_simulation/isaac.flatsim.DifferentialBaseSimulator/diff_base_command"
+      },
+      {
+        "source": "LeftCameraSubscriber/isaac.alice.TcpSubscriber/DepthSensor",
+        "target": "left_cam_depth_img_bridge/depth_img_bridge/depth_image" 
+      }
+    ]
+  }
+}
