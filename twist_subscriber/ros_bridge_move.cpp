@@ -38,7 +38,7 @@ class CallbackFunctor {
     // std::cout << "Linear: " << command.linear_speed() << "\tAngular: " << command.angular_speed() <<"\n";
     
     // Use the DifferentialBaseControl to create proto to be sent to robot
-    ToProto(command, bridge_->tx_base_cmd().initProto());
+    ToProto(command, bridge_->tx_base_cmd().initProto(), bridge_->tx_base_cmd().buffers());
     // Publish Proto message
     bridge_->tx_base_cmd().publish();
   }
