@@ -1,14 +1,14 @@
 {
   "name": "carter_sim",
   "config_files": [
-    "apps/carter_sim/navigation.config.json",
-    "apps/carter_sim/carter.config.json",
-    "apps/carter_sim/joystick.config.json"
+    "apps/carter/carter_sim/navigation.config.json",
+    "apps/carter/carter_sim/carter.config.json",
+    "apps/carter/carter_sim/joystick.config.json"
   ],
   "graph_files": [
-    "apps/carter_sim/navigation.graph.json",
-    "apps/carter_sim/carter.graph.json",
-    "apps/carter_sim/joystick.graph.json"
+    "apps/carter/carter_sim/navigation.graph.json",
+    "apps/carter/carter_sim/carter.graph.json",
+    "apps/carter/carter_sim/joystick.graph.json"
   ],
   "modules": [
     "map",
