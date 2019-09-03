@@ -1,12 +1,21 @@
 {
   "name": "carter_sim",
   "config_files": [
+<<<<<<< HEAD
     "apps/carter/carter_sim/navigation.config.json",
     "apps/carter/carter_sim/carter.config.json"
   ],
   "graph_files": [
     "apps/carter/carter_sim/navigation.graph.json",
     "apps/carter/carter_sim/carter.graph.json"
+=======
+    "apps/carter_sim/navigation.config.json",
+    "apps/carter_sim/carter.config.json"
+  ],
+  "graph_files": [
+    "apps/carter_sim/navigation.graph.json",
+    "apps/carter_sim/carter.graph.json"
+>>>>>>> 831e523a0d93b2172333e91556dab7f91b3c70b8
   ],
   "modules": [
     "map",
