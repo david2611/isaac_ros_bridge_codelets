@@ -46,6 +46,7 @@ to read:
 3. untar the output tarball file created to an appropriate locatione (e.g. ros_packages)
 
 4. Update the `third_party/ros.bzl` file in your Isaac installation.
+    * Add `"isaac_local_repository"` to the first load command
     * Comment out the following lines:
     ```
     isaac_new_http_archive(
@@ -84,7 +85,7 @@ as expected.
 ### Running the App ###
 Terminal 1 within Isaac Sim folder:
 ```
-./Engine/Binaries/Linux/UE4Editor IsaacSimProject CarterWarehouse_P vulkan -isaac_sim_config_json="<isaac_sdk_path>/apps/carter_sim/bridge_config/carter_full.json"
+./Engine/Binaries/Linux/UE4Editor IsaacSimProject CarterWarehouse_P vulkan -isaac_sim_config_json="<isaac_sdk_path>/apps/carter/carter_sim/bridge_config/carter_full.json"
 ```
 where `<isaac_sdk_path>` is the path to your Isaac SDK installation.
 

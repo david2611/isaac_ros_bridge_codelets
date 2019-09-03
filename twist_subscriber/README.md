@@ -39,7 +39,7 @@ joystick teleop nodes rather than the Isaac joystick libraries to show that we c
 ### Running the App ###
 Terminal 1 within Isaac Sim folder:
 ```
-./Engine/Binaries/Linux/UE4Editor IsaacSimProject CarterWarehouse_P vulkan -isaac_sim_config_json="<isaac_sdk_path>/apps/carter_sim/bridge_config/carter_full.json"
+./Engine/Binaries/Linux/UE4Editor IsaacSimProject CarterWarehouse_P vulkan -isaac_sim_config_json="<isaac_sdk_path>/apps/carter/carter_sim/bridge_config/carter_full.json"
 ```
 where `<isaac_sdk_path>` is the path to your Isaac SDK installation.
 

@@ -9,7 +9,7 @@ Example apps should provide some meaningful, easily debugged test example that p
 Note that code here is likely "over-commented" as it was developed whilst learning how Isaac and ROS communicate. 
 It is encouraged that contributors maintain a high-level of commenting and clarity to ensure easy use by others.
 
-The repo is designed to exist within the apps/carter_sim folder of your isaac_sdk package.
+**Currently assumes repository is stored in the root Isaac SDK folder. If not see setup.**
 
 ### Notes for contributors ###
 Anyone who adds a new translation codelet should try to follow the structure of already existing codelets, being sure to
@@ -31,8 +31,7 @@ provided you must complete the following steps:
 
 ### Update carter_sim BUILD file ###
 
-Add the following to the bazel BUILD file in  your isaac_sdk apps/carter_sim/ folder to enable use of carter_sim 
-config files outside of the carter_sim project:
+Add the following to the bazel BUILD file in  your isaac_sdk apps/carter/carter_sim/ folder to enable use of carter_sim config files outside of the carter_sim project:
 ```
 filegroup(
     name = "carter_setup_files",
@@ -52,9 +51,8 @@ filegroup(
     visibility = ["//visibility:public"],
 )
 ```
-### Update path to codelet sub-folders
-If you have not saved the repo your base Isaac SDK folder, you must change the path to the codelet sub-folders in the repo
-within those sub-folders' .app.json and BUILD files.
+### Update path to codelet sub-folders ###
+If you have not saved the repo your base Isaac SDK folder, you must change the path to the codelet sub-folders in the repo within those sub-folders' .app.json and BUILD files.
 
 For example if ros_bridge_codelets is saved in packages in Isaac SDK folder line 18 of 
 img_publisher/carter_sim_ros_img_pub.app.json changes from 
@@ -82,6 +80,8 @@ to read:
 3. untar the output tarball file created to an appropriate locatione (e.g. ros_packages)
 
 4. Update the `third_party/ros.bzl` file in your Isaac installation.
+    * Add `"isaac_local_repository"` to the first load command
+
     * Comment out the following lines:
     ```
     isaac_new_http_archive(
@@ -123,7 +123,7 @@ img_publisher
 
 Terminal 1 within Isaac Sim folder:
 ```
-./Engine/Binaries/Linux/UE4Editor IsaacSimProject CarterWarehouse_P vulkan -isaac_sim_config_json="<isaac_sdk_path>/apps/carter_sim/bridge_config/carter_full.json"
+./Engine/Binaries/Linux/UE4Editor IsaacSimProject CarterWarehouse_P vulkan -isaac_sim_config_json="<isaac_sdk_path>/apps/carter/carter_sim/bridge_config/carter_full.json"
 ```
 where `<isaac_sdk_path>` is the path to your Isaac SDK installation.
 
@@ -150,7 +150,7 @@ Currently assumes Twist message contains a single linear velocity and a single a
 
 Terminal 1 within Isaac Sim folder:
 ```
-./Engine/Binaries/Linux/UE4Editor IsaacSimProject CarterWarehouse_P vulkan -isaac_sim_config_json="<isaac_sdk_path>/apps/carter_sim/bridge_config/carter_full.json"
+./Engine/Binaries/Linux/UE4Editor IsaacSimProject CarterWarehouse_P vulkan -isaac_sim_config_json="<isaac_sdk_path>/apps/carter/carter_sim/bridge_config/carter_full.json"
 ```
 where `<isaac_sdk_path>` is the path to your Isaac SDK installation.
 
