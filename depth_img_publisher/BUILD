@@ -6,13 +6,8 @@ isaac_app(
     data = [
         "//apps/assets/maps",
         "//packages/map:libmap_module.so",
-<<<<<<< HEAD
         "//apps/carter/carter_sim:carter_setup_files",
         "//apps/carter/carter_sim:navigation_setup_files",
-=======
-        "//apps/carter_sim:carter_setup_files",
-        "//apps/carter_sim:navigation_setup_files",
->>>>>>> 831e523a0d93b2172333e91556dab7f91b3c70b8
     ],
     modules = [
         "navigation",
