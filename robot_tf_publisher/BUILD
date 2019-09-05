@@ -8,6 +8,7 @@ isaac_app(
         "//packages/map:libmap_module.so",
         "//apps/carter/carter_sim:carter_setup_files",
         "//apps/carter/carter_sim:navigation_setup_files",
+        "//apps/carter/carter_sim:joystick_setup_files",
     ],
     modules = [
         "navigation",
@@ -15,6 +16,8 @@ isaac_app(
         "planner",
         "viewers",
         "flatsim",
+        "sensors:joystick",
+        "//isaac_ros_bridge_codelets/odom_publisher:ros_odom_pub_components",
         "//isaac_ros_bridge_codelets/robot_tf_publisher:ros_robot_tf_pub_components",
         
     ],

@@ -2,11 +2,13 @@
   "name": "carter_sim",
   "config_files": [
     "apps/carter/carter_sim/navigation.config.json",
-    "apps/carter/carter_sim/carter.config.json"
+    "apps/carter/carter_sim/carter.config.json",
+    "apps/carter/carter_sim/joystick.config.json"
   ],
   "graph_files": [
     "apps/carter/carter_sim/navigation.graph.json",
-    "apps/carter/carter_sim/carter.graph.json"
+    "apps/carter/carter_sim/carter.graph.json",
+    "apps/carter/carter_sim/joystick.graph.json"
   ],
   "modules": [
     "map",
@@ -15,18 +17,46 @@
     "planner",
     "viewers",
     "flatsim",
+    "sensors:joystick",
+    "//isaac_ros_bridge_codelets/odom_publisher:ros_odom_pub_components",
     "//isaac_ros_bridge_codelets/robot_tf_publisher:ros_robot_tf_pub_components"
   ],
   "config": {
+    "base_odometry" : {
+      "base_odometry" : {
+        "tick_period" : "30Hz"
+      }
+    },
+    "ros_odometry_publisher" : {
+      "ros_odometry_publisher" : {
+        "tick_period" : "30Hz",
+        "ros_header_frame": "odom",
+        "ros_child_frame": "robot",
+        "print_isaac_odometry": false
+      }
+    },
     "carter1_tf_publisher" : {
       "robot_tf_publisher" : {
-        "tick_period" : "1s",
+        "tick_period" : "30Hz",
         "isaac_robot_components" : ["lidar", "left_camera", "right_camera"]
       }
     }
   },
   "graph": {
     "nodes": [
+      {
+        "name": "base_odometry",
+          "components":[
+            {
+              "name": "message_ledger",
+              "type": "isaac::alice::MessageLedger"
+            },
+            {
+              "name": "base_odometry",
+              "type": "isaac::navigation::DifferentialBaseOdometry"
+            }
+          ]
+      },
       {
         "name": "carter1_tf_publisher",
         "components": [
@@ -39,12 +69,33 @@
             "type": "isaac::rosbridge::RobotTFRosBridge"
           }
         ]
+      },
+      {
+        "name": "ros_odometry_publisher",
+        "components": [
+          {
+            "name": "message_ledger",
+            "type": "isaac::alice::MessageLedger"
+          },
+          {
+            "name": "ros_odometry_publisher",
+            "type": "isaac::rosbridge::OdometryRosBridge"
+          }
+        ]
       }
     ],
     "edges": [
       {
         "source": "control/isaac.planner.DifferentialBaseControl/cmd",
         "target": "base_simulation/isaac.flatsim.DifferentialBaseSimulator/diff_base_command"
+      },
+      {
+        "source": "base_simulation/isaac.flatsim.DifferentialBaseSimulator/diff_base_state",
+        "target": "base_odometry/base_odometry/state"
+      },
+      {
+        "source": "base_odometry/base_odometry/odometry",
+        "target": "ros_odometry_publisher/ros_odometry_publisher/odometry"
       }
     ]
   }
