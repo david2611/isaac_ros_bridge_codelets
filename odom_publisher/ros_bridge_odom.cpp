@@ -20,6 +20,21 @@ int get_sign(float number){
 namespace isaac {
 namespace rosbridge {
 
+void print_pose(Pose3d pose){ 
+  auto translation = pose.translation;
+  auto rpy = pose.rotation.eulerAnglesRPY();
+  auto quaternion = pose.rotation.quaternion();
+  // print translation
+  std::cout << "Translation: {X: " << translation[0] << ", Y: " << translation[1] ;
+  std::cout << ", Z: " << translation[2] << "}\n";
+  // print rotation roll pitch yaw
+  std::cout << "RPY: {Roll: " << rpy[0] << ", Pitch: " << rpy[1] << ", Yaw: ";
+  std::cout << rpy[2] << "}\n";
+  // print rotation quaternion
+  std::cout << "Quaternion: {W: " << quaternion.w() << ", X: " << quaternion.x() << ", Y: ";
+  std::cout << quaternion.y() << ", Z: " << quaternion.z() << "}\n";
+}
+
 struct OdometryRosBridge::RosOdometryData{
   ros::NodeHandle node;
   ros::Publisher pub;
@@ -45,6 +60,13 @@ void OdometryRosBridge::start() {
 }
 
 void OdometryRosBridge::tick() {
+  std::optional<Pose3d> temp_robot_pose = node()->pose().tryGet("world", "map", node()->clock()->timestamp());
+  if (temp_robot_pose){
+    std::cout << "--------------------------------------------------------------" << std::endl;
+    print_pose(*temp_robot_pose);
+    std::cout << "==============================================================-" << std::endl;
+  }
+  
   ros::Time ros_time_now = ros::Time::now();
   // Read what is within the odometry message so as to understand it
   auto proto_reader = rx_odometry().getProto();
