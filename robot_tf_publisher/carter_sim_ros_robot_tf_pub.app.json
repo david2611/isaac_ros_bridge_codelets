@@ -1,0 +1,51 @@
+{
+  "name": "carter_sim",
+  "config_files": [
+    "apps/carter/carter_sim/navigation.config.json",
+    "apps/carter/carter_sim/carter.config.json"
+  ],
+  "graph_files": [
+    "apps/carter/carter_sim/navigation.graph.json",
+    "apps/carter/carter_sim/carter.graph.json"
+  ],
+  "modules": [
+    "map",
+    "navigation",
+    "perception",
+    "planner",
+    "viewers",
+    "flatsim",
+    "//isaac_ros_bridge_codelets/robot_tf_publisher:ros_robot_tf_pub_components"
+  ],
+  "config": {
+    "carter1_tf_publisher" : {
+      "robot_tf_publisher" : {
+        "tick_period" : "1s",
+        "isaac_robot_components" : ["lidar", "left_camera", "right_camera"]
+      }
+    }
+  },
+  "graph": {
+    "nodes": [
+      {
+        "name": "carter1_tf_publisher",
+        "components": [
+          {
+            "name": "message_ledger",
+            "type": "isaac::alice::MessageLedger"
+          },
+          {
+            "name": "robot_tf_publisher",
+            "type": "isaac::rosbridge::RobotTFRosBridge"
+          }
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "source": "control/isaac.planner.DifferentialBaseControl/cmd",
+        "target": "base_simulation/isaac.flatsim.DifferentialBaseSimulator/diff_base_command"
+      }
+    ]
+  }
+}
