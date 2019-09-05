@@ -26,6 +26,10 @@ Isaac parameters
 
 `publisher_channel_name` - name of the ROS topic codelet publishes to
 
+`ros_header_frame` - name of the header frame used in ROS describing robot initial origin(default "odom")
+
+`ros_child_frame` - name of the child frame used in ROS describing the robot frame (default "base_link")
+
 Setup
 -----
 If you have followed steps 1., 2., and 3. of the main setup instructions for this repo then nothing further is required.
@@ -48,6 +52,7 @@ to read:
 3. untar the output tarball file created to an appropriate locatione (e.g. ros_packages)
 
 4. Update the `third_party/ros.bzl` file in your Isaac installation.
+    * Add `"isaac_local_repository"` to the first load command
     * Comment out the following lines:
     ```
     isaac_new_http_archive(
@@ -74,16 +79,13 @@ to read:
 
 Example App
 -----------
-<!--The example application is built upon the basic carter_sim application where the robot navigates its way around an
-environment autonomously without any other input. Goal locations are generated randomly and obstacle avoidance is autonomous.
-All this application does it take the input from the left camera and publish it along a ROS topic.>
+The example application is built upon the basic carter_sim_joystick application where the robot is moved around it's environment using joystick controls.
+All this application does is publish the odometry and frame information into ROS.
 
-For the purpose of this application we simply view the ROS topic output with rqt_image_viewer to confirm this is operating
-as expected.
---> 
+For the purpose of this application we simply view the ROS topic output with rostopic echo and rviz to confirm this is operating as expected.
 
 ### Running the App ###
-<!--Terminal 1 within Isaac Sim folder:
+Terminal 1 within Isaac Sim folder:
 ```
 ./Engine/Binaries/Linux/UE4Editor IsaacSimProject CarterWarehouse_P vulkan -isaac_sim_config_json="<isaac_sdk_path>/apps/carter_sim/bridge_config/carter_full.json"
 ```
@@ -91,11 +93,24 @@ where `<isaac_sdk_path>` is the path to your Isaac SDK installation.
 
 Terminal 2 within Isaac SDK folder:  
 ```
-bazel run //isaac_ros_bridge_codelets/img_publisher:carter_sim_ros_img_pub -- --config="apps/assets/maps/carter_warehouse_p.config.json" --graph="apps/assets/maps/carter_warehouse_p.graph.json"
+bazel run //isaac_ros_bridge_codelets/odom_publisher:carter_sim_ros_odom_pub -- --config="apps/assets/maps/carter_warehouse_p.config.json" --graph="apps/assets/maps/carter_warehouse_p.graph.json"
 ```
 
 Terminal 3:
 ```
-rqt_image_view
+roscore
 ``` 
--->
+
+Terminal 4:
+```
+rostopic echo /isaac_odometry
+```
+
+Terminal 5:
+```
+rviz
+```
+
+With rviz running, set the fixed frame to "odom" and visualize the transform by adding tf.
+
+
