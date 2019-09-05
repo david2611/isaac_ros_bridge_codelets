@@ -1,34 +1,33 @@
-Image Publisher Translation Codelet
-====================================
+Robot Transform Publisher Translation Codelet
+=============================================
 
-This codelet aims to take colour images from Isaac Sim and translate them to ROS Image Messages published on a ROS topic. 
+This codelet aims to publish the transform information for a robot and all its components (sensors). Translates from the Isaac PoseTree to ROS tf.
 
 
 Isaac Codelet Name
 ------------------
-`isaac::rosbridge::opencv::ImageRosBridge`
+`isaac::rosbridge::RobotTFRosBridge`
 
 Input
 -----
-Isaac `ColorCameraProto` received whenever image is taken by simulated camera on a simulated robot in Isaac Sim.
-Proto is received on `rgbCapture_ros` channel.
+No Isaac Connections
 
 Output
 ------
-ROS Image Message created through use of cv_bridge
+ROS transform broadcast of robot frame and all its components.
 
 Isaac parameters
 ----------------
 
-`publisher_queue_size` - the ROS publisher queue depth
+`isaac_robot_name` - name of robot as it exists in the isaac pose tree (note for now this is also the name that will be given to the robot's frame in ROS).
 
-`publisher_channel_name` - name of the ROS topic codelet publishes to
+`isaac_robot_components` - list of names of each component attached to the robot as named in the isaac pose tree (this will contribute to the name of the frame for the component in ROS)
 
 Setup
 -----
 If you have followed steps 1., 2., and 3. of the main setup instructions for this repo then nothing further is required.
 
-This codelet requires use of the `cv_bridge` and `image_transport` packages not available in the base Isaac installation. If you did not complete step 3. of the main setup instructions you will need to include these packages in your Isaac ROS setup.
+This codelet requires use of the `tf` package not available in the base Isaac installation. If you did not complete step 3. of the main setup instructions you will need to include these packages in your Isaac ROS setup.
 
 To include these packages complete the following:
 1. Update `PACKAGES` parameter in `engine/build/scripts/ros_package_generation.sh` of your isaac_sdk installation 
@@ -36,7 +35,7 @@ to read:
     ```
     PACKAGES="roscpp rospy actionlib_msgs control_msgs diagnostic_msgs geometry_msgs
      map_msgs nav_msgs pcl_msgs sensor_msgs shape_msgs std_msgs stereo_msgs
-     tf2_geometry_msgs tf2_msgs trajectory_msgs visualization_msgs cv_bridge image_transport"
+     tf2_geometry_msgs tf2_msgs trajectory_msgs visualization_msgs tf"
     ```
 
 2. Run `engine/build/scripts/ros_package_generation.sh <distro> <package_name>`
@@ -73,14 +72,12 @@ to read:
 
 Example App
 -----------
-The example application is built upon the basic carter_sim application where the robot navigates its way around an
-environment autonomously without any other input. Goal locations are generated randomly and obstacle avoidance is autonomous.
-All this application does it take the input from the left camera and publish it along a ROS topic.
+The example application is built upon the basic carter_sim_joystick application where the robot is moved around it's environment using joystick controls.
+All this application does is publish the odometry and frame information into ROS.
 
-For the purpose of this application we simply view the ROS topic output with rqt_image_viewer to confirm this is operating
-as expected. 
+For the purpose of this application we simply view the ROS topic output with rviz to confirm this is operating as expected.
 
-
+We should see a tf visualization with the robot, two cameras, and a lidar.
 
 ### Running the App ###
 Terminal 1 within Isaac Sim folder:
@@ -91,10 +88,15 @@ where `<isaac_sdk_path>` is the path to your Isaac SDK installation.
 
 Terminal 2 within Isaac SDK folder:  
 ```
-bazel run //isaac_ros_bridge_codelets/img_publisher:carter_sim_ros_img_pub -- --config="apps/assets/maps/carter_warehouse_p.config.json" --graph="apps/assets/maps/carter_warehouse_p.graph.json"
+bazel run //isaac_ros_bridge_codelets/robot_tf_publisher:carter_sim_ros_robot_tf_pub -- --config="apps/assets/maps/carter_warehouse_p.config.json" --graph="apps/assets/maps/carter_warehouse_p.graph.json"
 ```
 
 Terminal 3:
 ```
-rqt_image_view
+roscore
+``` 
+
+Terminal 4:
+```
+rviz
 ``` 
