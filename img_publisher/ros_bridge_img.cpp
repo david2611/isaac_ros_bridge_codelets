@@ -46,7 +46,7 @@ void ImageRosBridge::start() {
 
 void ImageRosBridge::tick() {
   if (ros::ok()) {
-
+    ros::Time ros_time_now = ros::Time::now();
     // parse the received messages
     auto proto1 = rx_rgbCapture_ros().getProto();
     ImageConstView3ub rgb_image;
@@ -63,6 +63,8 @@ void ImageRosBridge::tick() {
         // convert cv Mat to  an image pointer message with cv_bridge
         // need to update the header?
         sensor_msgs::ImagePtr ros_img_msg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", image).toImageMsg();
+        ros_img_msg->header.stamp = ros_time_now;
+        ros_img_msg->header.frame_id = get_ros_frame_name();
         img_data_->pub.publish(ros_img_msg);
 
     }

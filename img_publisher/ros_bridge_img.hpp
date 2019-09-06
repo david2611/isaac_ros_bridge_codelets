@@ -35,6 +35,9 @@ class ImageRosBridge : public alice::Codelet {
   // ROS publisher channel. Used to broadcast messages to ROS
   ISAAC_PARAM(std::string, ros_publisher_channel_name, "isaac_rgb_image");
 
+  // Name of frame used in ROS (format <robot_name>_<camera_name>)
+  ISAAC_PARAM(std::string, ros_frame_name, "robot_left_camera")
+
  private:
   // Hide the ROS implementation details
   struct RosImageData;
