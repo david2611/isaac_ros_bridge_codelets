@@ -76,6 +76,7 @@ to read:
 2. Run `engine/build/scripts/ros_package_generation.sh <distro> <package_name>`
     * `<distro>` - ROS distribution used (should be `melodic`)
     * `<package_name>` - name you want to give your package
+        * NOTE: do not use this to define a subdirectory to save the package into. Assume package will be created within the folder the script call is made otherwise the script breaks.
 
 3. untar the output tarball file created to an appropriate locatione (e.g. ros_packages)
 
@@ -139,6 +140,77 @@ rqt_image_view
 
 **Extra ROS Requirements:**  `cv_bridge` and  `image_transport` packages
 
+odom_publisher
+------------------
+**Purpose:** Transmit the odometry information (including assumed poses) form Isaac to ROS.
+
+**Message Conversion:**  Isaac Odometry2Proto -> ROS geometry_msgs::TransformStamped and ROS nav_msgs::Odometry messages
+
+**Running Example App:**
+
+Terminal 1 within Isaac Sim folder:
+```
+./Engine/Binaries/Linux/UE4Editor IsaacSimProject CarterWarehouse_P vulkan -isaac_sim_config_json="<isaac_sdk_path>/apps/carter/carter_sim/bridge_config/carter_full.json"
+```
+where `<isaac_sdk_path>` is the path to your Isaac SDK installation.
+
+Terminal 2 within Isaac SDK folder:  
+```
+bazel run //isaac_ros_bridge_codelets/twist_subscriber:carter_sim_ros_odom_pub-- --config="apps/assets/maps/carter_warehouse_p.config.json" --graph="apps/assets/maps/carter_warehouse_p.graph.json"
+```
+
+Terminal 3:
+```
+roscore
+```
+
+Terminal 4:
+```
+rviz
+```
+ 
+ Note, you will need to move the robot with the joystick through Isaac and set up RViz appropriately to view all the components. Current version uses odom_publisher as well
+
+**Extra ROS Requirements:**  `tf` package
+
+robot_tf_publisher
+------------------
+**Purpose:** Transmit the relative pose information of a robot in Isaac within the Isaac PoseTree to ROS tf frames.
+
+**Message Conversion:**  Multiple Isaac Pose3d from Isaac PoseTree-> ROS tf
+
+**Running Example App:**
+
+Terminal 1 within Isaac Sim folder:
+```
+./Engine/Binaries/Linux/UE4Editor IsaacSimProject CarterWarehouse_P vulkan -isaac_sim_config_json="<isaac_sdk_path>/apps/carter/carter_sim/bridge_config/carter_full.json"
+```
+where `<isaac_sdk_path>` is the path to your Isaac SDK installation.
+
+Terminal 2 within Isaac SDK folder:  
+```
+bazel run //isaac_ros_bridge_codelets/twist_subscriber:carter_sim_ros_robot_tf_pub-- --config="apps/assets/maps/carter_warehouse_p.config.json" --graph="apps/assets/maps/carter_warehouse_p.graph.json"
+```
+
+Terminal 3:
+```
+roscore
+```
+
+Terminal 4:
+```
+rostopic echo /isaac_odometry
+```
+
+Terminal 5:
+```
+rviz
+```
+ 
+ Note, you will need to move the robot with the joystick through Isaac and set up RViz appropriately to view all the components.
+
+**Extra ROS Requirements:**  `tf` package
+
 twist_subscriber
 ----------------
 **Purpose:** Translate ROS Twist messages to enable movement of simulated Isaac robots. 
@@ -176,6 +248,3 @@ rosrun teleop_twist_joy teleop_node
 Note: you may need to reconfigure teleop_node to match your joystick config (e.g. `_axis_angular:=2`) 
 
 **Extra ROS Requirements:**  None
-
-
-
