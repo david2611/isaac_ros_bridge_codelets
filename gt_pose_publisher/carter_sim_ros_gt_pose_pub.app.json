@@ -1,0 +1,51 @@
+{
+  "name": "carter_sim",
+  "config_files": [
+    "apps/carter/carter_sim/navigation.config.json",
+    "apps/carter/carter_sim/carter.config.json",
+    "apps/carter/carter_sim/joystick.config.json"
+  ],
+  "graph_files": [
+    "apps/carter/carter_sim/navigation.graph.json",
+    "apps/carter/carter_sim/carter.graph.json",
+    "apps/carter/carter_sim/joystick.graph.json"
+  ],
+  "modules": [
+    "map",
+    "navigation",
+    "perception",
+    "planner",
+    "viewers",
+    "flatsim",
+    "sensors:joystick",
+    "//isaac_ros_bridge_codelets/gt_pose_publisher:ros_gt_pose_pub_components"
+  ],
+  "config": {
+    "ros_gt_pose_publisher" : {
+      "ros_gt_pose_publisher" : {
+        "tick_period" : "60Hz",
+        "isaac_robot_names" : ["robot"],
+        "isaac_odom_frame_names": ["odom"]
+      }
+    }
+  },
+  "graph": {
+    "nodes": [
+      {
+        "name": "ros_gt_pose_publisher",
+        "components": [
+          {
+            "name": "message_ledger",
+            "type": "isaac::alice::MessageLedger"
+          },
+          {
+            "name": "ros_gt_pose_publisher",
+            "type": "isaac::rosbridge::GTPoseBridge"
+          }
+        ]
+      }
+    ],
+    "edges": [      
+    ]
+  }
+}

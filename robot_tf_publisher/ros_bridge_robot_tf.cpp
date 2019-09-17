@@ -70,8 +70,13 @@ void RobotTFRosBridge::tick() {
         auto translation = robotTcomp->translation;
         auto quaternion = robotTcomp->rotation.quaternion();
         transform.setOrigin(tf::Vector3(translation[0], translation[1], translation[2]));
-        transform.setRotation(tf::Quaternion(quaternion.w(), quaternion.x(), quaternion.y(), quaternion.z()));
-        robot_tf_data_->tf_broadcaster.sendTransform(tf::StampedTransform(transform, ros_tick_time, robot_name, robot_name + "_" + components[i]));
+        transform.setRotation(tf::Quaternion(quaternion.x(), quaternion.y(), quaternion.z(), quaternion.w()));
+        if (get_gt_robot()){
+          robot_tf_data_->tf_broadcaster.sendTransform(tf::StampedTransform(transform, ros_tick_time, "gt_" + robot_name, "gt_" + robot_name + "_" + components[i]));
+        } else {
+          robot_tf_data_->tf_broadcaster.sendTransform(tf::StampedTransform(transform, ros_tick_time, robot_name, robot_name + "_" + components[i]));
+        }
+        
       }
     }
   } else {

@@ -29,6 +29,9 @@ class RobotTFRosBridge : public alice::Codelet {
   // Name of all components (sensors) on the robot with available poses
   ISAAC_PARAM(std::vector<std::string>, isaac_robot_components, {});
 
+  // Flag for if robot created is one with GT poses
+  ISAAC_PARAM(bool, gt_robot, false)
+
 
  private:
   // Hide the ROS implementation details
