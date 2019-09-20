@@ -50,6 +50,15 @@ filegroup(
            ],
     visibility = ["//visibility:public"],
 )
+
+filegroup(
+    name = "joystick_setup_files",
+    data = [
+        "joystick.config.json",
+        "joystick.graph.json"
+    ],
+    visibility = ["//visibility:public"],
+)
 ```
 ### Update path to codelet sub-folders ###
 If you have not saved the repo your base Isaac SDK folder, you must change the path to the codelet sub-folders in the repo within those sub-folders' .app.json and BUILD files.
@@ -132,8 +141,12 @@ Terminal 2 within Isaac sdk folder:
 ```
 bazel run //isaac_ros_bridge_codelets/img_publisher:carter_sim_ros_img_pub -- --config="apps/assets/maps/carter_warehouse_p.config.json" --graph="apps/assets/maps/carter_warehouse_p.graph.json"
 ```
-
 Terminal 3:
+```
+roscore
+```
+
+Terminal 4:
 ```
 rqt_image_view
 ```
