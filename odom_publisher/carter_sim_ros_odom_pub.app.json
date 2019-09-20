@@ -18,7 +18,8 @@
     "viewers",
     "flatsim",
     "sensors:joystick",
-    "//isaac_ros_bridge_codelets/odom_publisher:ros_odom_pub_components"
+    "//isaac_ros_bridge_codelets/odom_publisher:ros_odom_pub_components",
+    "//isaac_ros_bridge_codelets/odom_publisher:rigid_group_reader_components"
   ],
   "config": {
     "base_odometry" : {
@@ -30,7 +31,7 @@
       "ros_odometry_publisher" : {
         "tick_period" : "1Hz",
         "ros_header_frame": "odom",
-        "print_isaac_odometry": true
+        "print_isaac_odometry": false
       }
     }
   },
@@ -61,6 +62,19 @@
             "type": "isaac::rosbridge::OdometryRosBridge"
           }
         ]
+      },
+      {
+        "name": "rigid_group_reader",
+        "components": [
+          {
+            "name": "message_ledger",
+            "type": "isaac::alice::MessageLedger"
+          },
+          {
+            "name": "rigid_group_reader",
+            "type": "isaac::RigidGroupReader"
+          }
+        ]
       }
     ],
     "edges": [
@@ -75,7 +89,12 @@
       {
         "source": "base_odometry/base_odometry/odometry",
         "target": "ros_odometry_publisher/ros_odometry_publisher/odometry"
+      },
+      {
+        "source": "RigidBodySubscriber/isaac.alice.TcpSubscriber/bodies",
+        "target": "rigid_group_reader/rigid_group_reader/gt_poses"
       }
+      
     ]
   }
 }

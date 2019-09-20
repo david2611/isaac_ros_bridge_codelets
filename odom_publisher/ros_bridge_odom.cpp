@@ -60,10 +60,44 @@ void OdometryRosBridge::start() {
 }
 
 void OdometryRosBridge::tick() {
-  std::optional<Pose3d> temp_robot_pose = node()->pose().tryGet("world", "map", node()->clock()->timestamp());
-  if (temp_robot_pose){
+  auto timestamp = node()->clock()->timestamp();
+  std::optional<Pose3d> temp_worldtrobot = node()->pose().tryGet("world", "robot", timestamp);
+  std::optional<Pose3d> temp_worldtmap = node()->pose().tryGet("world", "map", timestamp);
+  std::optional<Pose3d> temp_worldtrobotinit = node()->pose().tryGet("world", "robot_init", timestamp);
+  std::optional<Pose3d> temp_worldtodom = node()->pose().tryGet("world", "odom", timestamp);
+  std::optional<Pose3d> temp_odomtrobot = node()->pose().tryGet("odom", "robot", timestamp);
+  if (temp_worldtrobot){
     std::cout << "--------------------------------------------------------------" << std::endl;
-    print_pose(*temp_robot_pose);
+    std::cout << "WORLD T ROBOT!!" << std::endl;
+    print_pose(*temp_worldtrobot);
+    std::cout << "==============================================================-" << std::endl;
+  }
+
+  if (temp_worldtmap){
+    std::cout << "--------------------------------------------------------------" << std::endl;
+    std::cout << "WORLD T MAP!!" << std::endl;
+    print_pose(*temp_worldtmap);
+    std::cout << "==============================================================-" << std::endl;
+  }
+
+  if (temp_worldtrobotinit){
+    std::cout << "--------------------------------------------------------------" << std::endl;
+    std::cout << "WORLD T ROBOT INIT!!" << std::endl;
+    print_pose(*temp_worldtrobotinit);
+    std::cout << "==============================================================-" << std::endl;
+  }
+
+  if (temp_worldtodom){
+    std::cout << "--------------------------------------------------------------" << std::endl;
+    std::cout << "WORLD T ODOM!!" << std::endl;
+    print_pose(*temp_worldtodom);
+    std::cout << "==============================================================-" << std::endl;
+  }
+
+  if (temp_odomtrobot){
+    std::cout << "--------------------------------------------------------------" << std::endl;
+    std::cout << "ODOM T ROBOT!!" << std::endl;
+    print_pose(*temp_odomtrobot);
     std::cout << "==============================================================-" << std::endl;
   }
   
@@ -106,7 +140,10 @@ void OdometryRosBridge::tick() {
   // get the rotation angle (theta) from Isaac as inverse cosine of X element of SO2dProto
   // Could also use inverse sine of Y element of S02dProto (see SO2dProto documentation)
   float rotation_angle = std::abs(std::acos(odom_tf_rotation.getQ().getX())) * get_sign(std::asin(odom_tf_rotation.getQ().getY()));
-  std::cout << "rotation_angle: " << (360*rotation_angle)/(2*3.14159262) << "\n";
+  if (get_print_isaac_odometry()){
+    std::cout << "rotation_angle: " << (360*rotation_angle)/(2*3.14159262) << "\n";
+  }
+  
   
   // Calculate Quaternion message needed for odometry in ROS
   geometry_msgs::Quaternion ros_odom_quat = tf::createQuaternionMsgFromYaw(rotation_angle);

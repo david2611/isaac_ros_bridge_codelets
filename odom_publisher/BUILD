@@ -18,6 +18,7 @@ isaac_app(
         "flatsim",
         "sensors:joystick",
         "//isaac_ros_bridge_codelets/odom_publisher:ros_odom_pub_components",
+        "//isaac_ros_bridge_codelets/odom_publisher:rigid_group_reader_components",
         
     ],
 )
@@ -31,3 +32,18 @@ isaac_cc_module(
         "//third_party:ros"
     ]
 )
+
+isaac_cc_module(
+  name = "diff_base_reader_components",
+  srcs = ["base_state_reader.cpp"],
+  hdrs = ["base_state_reader.hpp"],
+  visibility = ["//visibility:public"],
+)
+
+isaac_cc_module(
+  name = "rigid_group_reader_components",
+  srcs = ["rigid_group_reader.cpp"],
+  hdrs = ["rigid_group_reader.hpp"],
+  visibility = ["//visibility:public"],
+)
+
