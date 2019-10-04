@@ -47,16 +47,18 @@ void RobotTFRosBridge::start() {
 void RobotTFRosBridge::tick() {
   if (ros::ok()) {
     std::string robot_name = get_isaac_robot_name();
+    std::string ros_robot_name = get_ros_robot_name();
     std::vector<std::string> components = get_isaac_robot_components();
     double tick_time = getTickTime();
     double node_clock_timestamp = node()->clock()->timestamp();
     ros::Time ros_tick_time = ros::Time::now();
-    std::cout << components.size() << std::endl;
     for (uint i=0; i < components.size(); i++)
     {
-      std::cout << robot_name << ", " << components[i] << std::endl;
-      std::cout << tick_time << std::endl;
-      std::cout << node_clock_timestamp << std::endl;
+      if (get_print_debug()){
+        std::cout << robot_name << ", " << components[i] << std::endl;
+        std::cout << tick_time << std::endl;
+        std::cout << node_clock_timestamp << std::endl;
+      }
 
       // get the pose tree transform for the robot to the component
       std::optional<Pose3d> robotTcomp = node()->pose().tryGet(robot_name, components[i], tick_time);
@@ -64,14 +66,16 @@ void RobotTFRosBridge::tick() {
       
       if (robotTcomp){
         tf::Transform transform;
-        // print the pose tree transform info (temp)
-        print_pose(*robotTcomp);
+        if (get_print_debug()){
+          // print the pose tree transform info (temp)
+          print_pose(*robotTcomp);
+        }
         // create transform and broadcast it
         auto translation = robotTcomp->translation;
         auto quaternion = robotTcomp->rotation.quaternion();
         transform.setOrigin(tf::Vector3(translation[0], translation[1], translation[2]));
         transform.setRotation(tf::Quaternion(quaternion.w(), quaternion.x(), quaternion.y(), quaternion.z()));
-        robot_tf_data_->tf_broadcaster.sendTransform(tf::StampedTransform(transform, ros_tick_time, robot_name, robot_name + "_" + components[i]));
+        robot_tf_data_->tf_broadcaster.sendTransform(tf::StampedTransform(transform, ros_tick_time, ros_robot_name, ros_robot_name + "_" + components[i]));
       }
     }
   } else {

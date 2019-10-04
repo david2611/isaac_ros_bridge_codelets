@@ -1,0 +1,128 @@
+{
+  "name": "carter_sim",
+  "config_files": [
+    "apps/carter/carter_sim/navigation.config.json",
+    "apps/carter/carter_sim/carter.config.json",
+    "apps/carter/carter_sim/joystick.config.json"
+  ],
+  "graph_files": [
+    "apps/carter/carter_sim/navigation.graph.json",
+    "apps/carter/carter_sim/carter.graph.json",
+    "apps/carter/carter_sim/joystick.graph.json"
+  ],
+  "modules": [
+    "map",
+    "navigation",
+    "perception",
+    "planner",
+    "viewers",
+    "flatsim",
+    "sensors:joystick",
+    "//isaac_ros_bridge_codelets/gt_pose_publisher:isaac_gt_pose_pub_components",
+    "//isaac_ros_bridge_codelets/gt_pose_publisher:ros_gt_pose_pub_components",
+    "//isaac_ros_bridge_codelets/odom_publisher:ros_odom_pub_components",
+    "//isaac_ros_bridge_codelets/robot_tf_publisher:ros_robot_tf_pub_components"
+
+  ],
+  "config": {
+    "carter1_gt_publisher": {
+      "isaac_gt_pose_creator": {
+        "rigid_body_robot_name": "carter_1"
+      },
+      "ros_gt_pose_diff_publisher": {
+        "tick_period": "30Hz"
+      }
+    },
+    "gt_robot_pose_initializer": {
+      "initial_pose": {
+        "lhs_frame": "gt_world",
+        "rhs_frame": "gt_robot_init",
+        "pose": [1, 0, 0, 0, 0, -11.0, 0.9]
+      }
+    },
+    "ros_odometry_publisher" : {
+      "ros_odometry_publisher" : {
+        "tick_period" : "30Hz",
+        "ros_header_frame": "odom",
+        "print_isaac_odometry": false
+      }
+    },
+    "carter1_tf_publisher" : {
+      "robot_tf_publisher" : {
+        "tick_period" : "30Hz",
+        "isaac_robot_components" : ["lidar", "left_camera", "right_camera"],
+        "ros_robot_name" : "base_link"
+      }
+    }
+
+  },
+  "graph": {
+    "nodes": [
+      
+      {
+        "name": "carter1_gt_publisher",
+        "components": [
+          {
+            "name": "message_ledger",
+            "type": "isaac::alice::MessageLedger"
+          },
+          {
+            "name": "isaac_gt_pose_creator",
+            "type": "isaac::GTPosePublisher"
+          },
+          {
+            "name": "ros_gt_pose_diff_publisher",
+            "type": "isaac::rosbridge::GTPoseDiffTFRosBridge"
+          }
+        ]
+      },
+      {
+        "name": "gt_robot_pose_initializer",
+        "start_order": -200,
+        "components": [
+          {
+            "name": "initial_pose",
+            "type": "isaac::alice::PoseInitializer"
+          }
+        ]
+      },
+      {
+        "name": "ros_odometry_publisher",
+        "components": [
+          {
+            "name": "message_ledger",
+            "type": "isaac::alice::MessageLedger"
+          },
+          {
+            "name": "ros_odometry_publisher",
+            "type": "isaac::rosbridge::OdometryRosBridge"
+          }
+        ]
+      },
+      {
+        "name": "carter1_tf_publisher",
+        "components": [
+          {
+            "name": "message_ledger",
+            "type": "isaac::alice::MessageLedger"
+          },
+          {
+            "name": "robot_tf_publisher",
+            "type": "isaac::rosbridge::RobotTFRosBridge"
+          }
+        ]
+      }
+      
+    ],
+    "edges": [
+      {
+        "source": "RigidBodySubscriber/isaac.alice.TcpSubscriber/bodies",
+        "target": "carter1_gt_publisher/isaac_gt_pose_creator/gt_poses"
+      },
+      {
+        "source": "segway_odometry/isaac.navigation.DifferentialBaseOdometry/odometry",
+        "target": "ros_odometry_publisher/ros_odometry_publisher/odometry"
+      }
+    ]
+  }
+}
