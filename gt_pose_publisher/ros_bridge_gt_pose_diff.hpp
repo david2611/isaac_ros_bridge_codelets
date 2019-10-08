@@ -43,7 +43,7 @@ class GTPoseDiffTFRosBridge : public alice::Codelet {
   ISAAC_PARAM(std::string, ros_child_frame, "odom");
 
   // Boolean flag for printing outputs
-  ISAAC_PARAM(std::string, print_debug, false);
+  ISAAC_PARAM(bool, print_debug, false);
 
  private:
   // Hide the ROS implementation details

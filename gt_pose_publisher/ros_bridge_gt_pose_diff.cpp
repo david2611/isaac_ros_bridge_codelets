@@ -11,13 +11,13 @@ void print_pose(Pose3d pose){
   auto translation = pose.translation;
   auto rpy = pose.rotation.eulerAnglesRPY();
   auto quaternion = pose.rotation.quaternion();
-  print translation
+  // print translation
   std::cout << "Translation: {X: " << translation[0] << ", Y: " << translation[1] ;
   std::cout << ", Z: " << translation[2] << "}\n";
-  print rotation roll pitch yaw
+  // print rotation roll pitch yaw
   std::cout << "RPY: {Roll: " << rpy[0] << ", Pitch: " << rpy[1] << ", Yaw: ";
   std::cout << rpy[2] << "}\n";
-  print rotation quaternion
+  // print rotation quaternion
   std::cout << "Quaternion: {W: " << quaternion.w() << ", X: " << quaternion.x() << ", Y: ";
   std::cout << quaternion.y() << ", Z: " << quaternion.z() << "}\n";
 }
