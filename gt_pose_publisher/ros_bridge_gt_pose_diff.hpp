@@ -36,8 +36,14 @@ class GTPoseDiffTFRosBridge : public alice::Codelet {
   // (ground-truth robot initialization position defined in bridge_config and matched in gt_robot_pose_initializer)
   ISAAC_PARAM(std::string, isaac_gt_odom_name, "gt_robot_init");
 
+  // Name of ground-truth world frame in the Isaac PoseTree 
+  ISAAC_PARAM(std::string, isaac_gt_world_name, "gt_world");
+
   // Name of ROS parent frame for the published diff transform
   ISAAC_PARAM(std::string, ros_parent_frame, "map");
+
+  // Name of ROS world frame for the published diff transform
+  ISAAC_PARAM(std::string, ros_world_frame, "world");
 
   // Name of ROS child frame for the published diff transform
   ISAAC_PARAM(std::string, ros_child_frame, "odom");

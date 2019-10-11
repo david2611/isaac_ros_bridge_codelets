@@ -76,8 +76,11 @@ void GTPoseDiffTFRosBridge::tick() {
       // Get the pose of the gt_robot w.r.t. gt_robot_init (actual position w.r.t. start)
       std::optional<Pose3d> gt_odomTrobot = node()->pose().tryGet(get_isaac_gt_odom_name(), get_isaac_gt_robot_name(), tick_time);
 
+      // Get the pose of the gt_robot_init w.r.t. the gt_world (actual position of start in world coordinates)
+      std::optional<Pose3d> gt_worldTodom = node()->pose().tryGet(get_isaac_gt_world_name(), get_isaac_gt_odom_name(), tick_time);
+
       // Only proceed if both poses have been read successfully
-      if (est_odomTrobot && gt_odomTrobot){
+      if (est_odomTrobot && gt_odomTrobot && gt_worldTodom){
         // Calculate the pose of the gt_robot with respect to the estimated robot
         // This should be the difference between the estimated position and the actual position
         const Pose3d rhs = *est_odomTrobot;
@@ -97,13 +100,16 @@ void GTPoseDiffTFRosBridge::tick() {
           std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
         }
 
-        // Convert to ROS TF and publish to ROS
+        // Convert diff to ROS TF and publish to ROS
         geometry_msgs::TransformStamped ros_robot_diff_tf = pose3d_to_tf(gt_robotTrobot, get_ros_parent_frame(), get_ros_child_frame(), ros_time_now);
         // broadcast the transform message
         tf_data_->tf_broadcaster.sendTransform(ros_robot_diff_tf);
-      }
 
-      // Temp code for debugging odd behaviour in ROS
+        // Convert world ROS TF and publish to ROS
+        geometry_msgs::TransformStamped ros_world_tf = pose3d_to_tf(*gt_worldTodom, get_ros_world_frame(), get_ros_parent_frame(), ros_time_now);
+        // broadcast the transform message
+        tf_data_->tf_broadcaster.sendTransform(ros_world_tf);
+      }
 
   } else {
     LOG_ERROR("An error has occurred within ROS.");

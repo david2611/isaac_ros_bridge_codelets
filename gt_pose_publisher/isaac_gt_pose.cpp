@@ -5,14 +5,14 @@ namespace isaac {
 
 void print_pose(Pose3d pose){ 
   auto translation = pose.translation;
-  // auto rpy = pose.rotation.eulerAnglesRPY();
+  auto rpy = pose.rotation.eulerAnglesRPY();
   // auto quaternion = pose.rotation.quaternion();
   // print translation
   std::cout << "Translation: {X: " << translation[0] << ", Y: " << translation[1] ;
   std::cout << ", Z: " << translation[2] << "}\n";
   // print rotation roll pitch yaw
-  // std::cout << "RPY: {Roll: " << rpy[0] << ", Pitch: " << rpy[1] << ", Yaw: ";
-  // std::cout << rpy[2] << "}\n";
+  std::cout << "RPY: {Roll: " << rpy[0] << ", Pitch: " << rpy[1] << ", Yaw: ";
+  std::cout << rpy[2] << "}\n";
   // print rotation quaternion
   // std::cout << "Quaternion: {W: " << quaternion.w() << ", X: " << quaternion.x() << ", Y: ";
   // std::cout << quaternion.y() << ", Z: " << quaternion.z() << "}\n";
@@ -50,10 +50,13 @@ void GTPosePublisher::tick(){
   for (uint i = 0; i < names_list_reader.size(); i++){
     if (names_list_reader[i] == get_rigid_body_robot_name()){
       RigidBody3Proto::Reader robot_rigid_body_reader = bodies_list_reader[i];
-      // std::cout << get_rigid_body_robot_name() << std::endl;
-      // std::cout << "----------------------------------------------------------" << std::endl;
-      // print_pose(FromProto(robot_rigid_body_reader.getRefTBody()));
-      // std::cout << "----------------------------------------------------------" << std::endl;
+      std::cout << get_rigid_body_robot_name() << std::endl;
+      std::cout << "----------------------------------------------------------" << std::endl;
+      print_pose(FromProto(robot_rigid_body_reader.getRefTBody()));
+      std::cout << "----------------------------------------------------------" << std::endl;
+      std::cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
+      print_pose(node()->pose().get("robot", "left_camera", tick_time));
+      std::cout << "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
       Pose3d robot_pose = FromProto(robot_rigid_body_reader.getRefTBody());
       node()->pose().set(get_gt_world_frame_name(), get_isaac_gt_robot_name(), robot_pose, tick_time);
 
