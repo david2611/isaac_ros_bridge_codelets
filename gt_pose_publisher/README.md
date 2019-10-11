@@ -14,6 +14,7 @@ WARNINGS AND ASSUMPTIONS
 3. The first stage is probably not necessary but I found it useful to understand what was going on within Isaac with ground-truth poses.
     * To use this stage effectively, you will need to define a PoseInitializer to define the gt_robot_init and gt_world poses.
     * These poses should be based upon what is written in carter_full.config.json and would need to be updated for any change of map.
+4. Visualizing of ground-truth object code currently has hard coded colour values and not all classes we can have are accommodated in the current setup. This needs to be updated.
 
 
 Isaac Codelet Names
@@ -103,10 +104,28 @@ All this application does is publish the odometry and frame information into ROS
 
 For the purpose of this application we simply view the ROS topic output with rviz to confirm this is operating as expected.
 
-We should see a tf visualization with the map (gt_robot_init) robot, odom (where robot thinks robot_init is), two cameras, and a lidar.
+We should see a tf visualization with the world, map (gt_robot_init) robot, odom (where robot thinks robot_init is), two cameras, and a lidar.
+
+We have now added functionality for visualizing ground-truth poses of all objects within the scene.
 
 ### WARNING ###
 If you change maps, you will need to update pose initializer information in the app.json.
+
+### GT Object Setup ###
+In order to visualize ground-truth objects as suggested in this app you will need a gt.json file which contains the centroid, label, and extent of each ground-truth object in the scene.
+
+Currently, we supply the gt.json for one of the environments we have created internally.
+
+To get your own follow the following steps:
+1. Undergo the process for attaining per-frame GT poses for all objects (this should provide not just gt-poses relative to the world but also the camera)
+2. After the above process you should have access to a labels.json file which is the concatenation of all gt_poses for each frame.
+3. Run `gen_challenge_gt.py` to get just the world-based poses and extents for each gt object in the environment.
+    * Usage `python gen_challenge_gt --full_labels_json <all_labels_file> --save_file <save_filename>`
+    where  `<all_labels_file>` is the name of the labels.json file that contains all gt_poses for every frame and `<save_filename>` is the name of the .json file that you want to save the ground-truth to.
+    * If there is a class which is not accommodated for in the code, the system will exit with a message.
+4. Once you have your challenge gt poses simply run `visualize_gt_rviz.py` to enable visualizing gt objects in rviz.
+    * Usage: `python visualize_gt_rviz.py --gt_file <gt_pose_file> --ros_topic <topic_name> --header_frame <world_frame_name>` where `<gt_pose_file>` is the .json output from `gen_challenge_gt.py`, `<topic_name>` is the name of the ros topic that you publish your gt object markers to, and `world_frame_name` is the name of the world frame in ROS that corresponds to the world frame the objects were originally mapped with.
+
 
 ### Running the App ###
 Terminal 1 within Isaac Sim folder:
@@ -125,7 +144,14 @@ Terminal 3:
 roscore
 ``` 
 
-Terminal 4:
+Terminal 4 within or referencing object_gt_visualization folder:
+```
+python visualize_gt_rviz.py --gt_file <gt_pose_file> --ros_topic <topic_name> --header_frame <world_frame_name>`
+```
+
+ where `<gt_pose_file>` is the .json output from `gen_challenge_gt.py`, `<topic_name>` is the name of the ros topic that you publish your gt object markers to, and `world_frame_name` is the name of the world frame in ROS that corresponds to the world frame the objects were originally mapped with.
+
+Terminal 5:
 ```
 rviz
 ``` 
