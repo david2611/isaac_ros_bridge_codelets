@@ -1,6 +1,5 @@
 #include "ros_bridge_gt_pose_diff.hpp"
 
-
 #include "ros/ros.h"
 #include "tf/transform_broadcaster.h"
 
@@ -24,7 +23,7 @@ void print_pose(Pose3d pose){
 
 geometry_msgs::TransformStamped pose3d_to_tf(Pose3d pose, std::string parent_frame, std::string child_frame, ros::Time time)
 {
-  // Convert to ROS TF and publish to ROS
+  // Convert translation
   geometry_msgs::TransformStamped tf;
   tf.header.stamp = time;
   tf.header.frame_id = parent_frame;
@@ -79,7 +78,7 @@ void GTPoseDiffTFRosBridge::tick() {
       // Get the pose of the gt_robot_init w.r.t. the gt_world (actual position of start in world coordinates)
       std::optional<Pose3d> gt_worldTodom = node()->pose().tryGet(get_isaac_gt_world_name(), get_isaac_gt_odom_name(), tick_time);
 
-      // Only proceed if both poses have been read successfully
+      // Only proceed if all poses have been read successfully
       if (est_odomTrobot && gt_odomTrobot && gt_worldTodom){
         // Calculate the pose of the gt_robot with respect to the estimated robot
         // This should be the difference between the estimated position and the actual position

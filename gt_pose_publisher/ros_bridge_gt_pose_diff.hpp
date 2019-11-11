@@ -9,9 +9,9 @@
 namespace isaac {
 namespace rosbridge {
 
-// This codelet represents a basic bridge to ROS for publishing images.
-// Every time an image is available it will convert it to a CV Mat object and use cv_bridge
-// to publish the Image message to ROS
+// This codelet represents a basic bridge to ROS for publishing the pose difference between
+// the ground-truth location of a robot, and the estimated pose through odometry alongside
+// the position of the world's GT origin w.r.t. estimated starting position
 class GTPoseDiffTFRosBridge : public alice::Codelet {
  public:
   // Explicitly declare constructors and destructors
