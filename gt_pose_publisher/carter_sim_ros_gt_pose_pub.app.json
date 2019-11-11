@@ -27,7 +27,7 @@
   "config": {
     "carter1_gt_publisher": {
       "isaac_gt_pose_creator": {
-        "rigid_body_robot_name": "carter_1"
+        "rigid_body_object_name": "carter_1"
       },
       "ros_gt_pose_diff_publisher": {
         "tick_period": "30Hz"
@@ -37,7 +37,7 @@
       "initial_pose": {
         "lhs_frame": "gt_world",
         "rhs_frame": "gt_robot_init",
-        "pose": [1, 0, 0, 0, 0, -11.0, 0.9]
+        "pose": [1, 0, 0, 0, -11.01, 63.47, 0.92]
       }
     },
     "ros_odometry_publisher" : {
