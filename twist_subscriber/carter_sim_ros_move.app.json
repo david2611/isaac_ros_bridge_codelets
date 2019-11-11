@@ -1,5 +1,5 @@
 {
-  "name": "carter_s",
+  "name": "carter_sim",
   "config_files": [
     "apps/carter/carter_sim/navigation.config.json",
     "apps/carter/carter_sim/carter.config.json"
@@ -24,6 +24,13 @@
         {
             "tick_period": "30Hz"
         }
+    },
+    "gt_robot_pose_initializer": {
+      "initial_pose": {
+        "lhs_frame": "gt_world",
+        "rhs_frame": "gt_robot_init",
+        "pose": [1, 0, 0, 0, 0, -11.0, 0.9]
+      }
     }
   
   },
@@ -39,6 +46,29 @@
           {
             "name": "ros_move_bridge",
             "type": "isaac::rosbridge::MovementRosBridge"
+          }
+        ]
+      },
+      {
+        "name": "gt_robot_pose_initializer",
+        "start_order": -200,
+        "components": [
+          {
+            "name": "initial_pose",
+            "type": "isaac::alice::PoseInitializer"
+          }
+        ]
+      },
+      {
+        "name": "lidar_publisher",
+        "components": [
+          {
+            "name": "message_ledger",
+            "type": "isaac::alice::MessageLedger"
+          },
+          {
+            "name": "lidar_publisher",
+            "type": "benchbot::LidarPublisher"
           }
         ]
       }

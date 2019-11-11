@@ -60,12 +60,12 @@ void OdometryRosBridge::start() {
 }
 
 void OdometryRosBridge::tick() {
-  std::optional<Pose3d> temp_robot_pose = node()->pose().tryGet("world", "map", node()->clock()->timestamp());
-  if (temp_robot_pose){
-    std::cout << "--------------------------------------------------------------" << std::endl;
-    print_pose(*temp_robot_pose);
-    std::cout << "==============================================================-" << std::endl;
-  }
+  // std::optional<Pose3d> temp_robot_pose = node()->pose().tryGet("world", "map", node()->clock()->timestamp());
+  // if (temp_robot_pose){
+  //   std::cout << "--------------------------------------------------------------" << std::endl;
+  //   print_pose(*temp_robot_pose);
+  //   std::cout << "==============================================================-" << std::endl;
+  // }
   
   ros::Time ros_time_now = ros::Time::now();
   // Read what is within the odometry message so as to understand it
@@ -106,7 +106,9 @@ void OdometryRosBridge::tick() {
   // get the rotation angle (theta) from Isaac as inverse cosine of X element of SO2dProto
   // Could also use inverse sine of Y element of S02dProto (see SO2dProto documentation)
   float rotation_angle = std::abs(std::acos(odom_tf_rotation.getQ().getX())) * get_sign(std::asin(odom_tf_rotation.getQ().getY()));
+  if (get_print_isaac_odometry()){
   std::cout << "rotation_angle: " << (360*rotation_angle)/(2*3.14159262) << "\n";
+  }
   
   // Calculate Quaternion message needed for odometry in ROS
   geometry_msgs::Quaternion ros_odom_quat = tf::createQuaternionMsgFromYaw(rotation_angle);
