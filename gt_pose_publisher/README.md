@@ -15,6 +15,7 @@ WARNINGS AND ASSUMPTIONS
     * To use this stage effectively, you will need to define a PoseInitializer to define the gt_robot_init and gt_world poses.
     * These poses should be based upon what is written in carter_full.config.json and would need to be updated for any change of map.
 4. Visualizing of ground-truth object code currently has hard coded colour values and not all classes we can have are accommodated in the current setup. This needs to be updated.
+5. Not certain that odom frame works as intended (robot pose relative to odom frame is estimated purely off wheel encoding localization and not full localization system).
 
 
 Isaac Codelet Names
