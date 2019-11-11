@@ -41,16 +41,6 @@
             "type": "isaac::rosbridge::MovementRosBridge"
           }
         ]
-      },
-      {
-        "name": "gt_robot_pose_initializer",
-        "start_order": -200,
-        "components": [
-          {
-            "name": "initial_pose",
-            "type": "isaac::alice::PoseInitializer"
-          }
-        ]
       }
     ],
     "edges": [
