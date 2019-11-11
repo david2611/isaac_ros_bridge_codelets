@@ -26,8 +26,14 @@ class RobotTFRosBridge : public alice::Codelet {
   // Name of robot in Isaac PoseTree
   ISAAC_PARAM(std::string, isaac_robot_name, "robot");
 
+  // Name of robot as it will appear in ROS
+  ISAAC_PARAM(std::string, ros_robot_name, "robot");
+
   // Name of all components (sensors) on the robot with available poses
   ISAAC_PARAM(std::vector<std::string>, isaac_robot_components, {});
+
+  // Flag dictating if debugging printing should happen
+  ISAAC_PARAM(bool, print_debug, false);
 
 
  private:
