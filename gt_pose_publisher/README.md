@@ -25,19 +25,19 @@ Isaac Codelet Names
 Input
 -----
 GTPosePublisher:
-* `gt_poses` channel receives a RigidBody3GroupProto containing the RigidBodies for all defined objects/robots in the scene? Exactly which object/robot used is defined by the `rigid_body_robot_name` IsaacParameter.
+* `gt_poses` channel receives a RigidBody3GroupProto containing the RigidBodies for all defined objects/robots in the scene. Exactly which object/robot used is defined by the `rigid_body_object_name` IsaacParameter.
 
 GTPoseDiffTFRosBridge: None
 
 Output
 ------
-ROS transform broadcast difference between gt_robot and robot (difference between map and odom)?
+ROS transform broadcast difference between gt_robot and robot (difference between map and odom)
 
 Isaac parameters
 ----------------
 GTPosePublisher:
-* `isaac_gt_robot_name` - name given to the ground-truth robot in the Isaac PoseTree (default "gt_robot")
-* `rigid_body_robot_name` - name of the robot in the list of rigid bodies. Should be defined in carter_full.config.json (e.g. "carter_1")
+* `isaac_gt_object_name` - name given to the ground-truth object (robot) in the Isaac PoseTree (default "gt_robot")
+* `rigid_body_object_name` - name of the object (robot) in the list of rigid bodies. Should be defined in carter_full.config.json (e.g. "carter_1")
 * `gt_world_frame_name` - name given to the ground-truth world origin in the Isaac PoseTree  (default "gt_world")
 
 GTPoseDiffTFRosBridge:
@@ -52,7 +52,7 @@ GTPoseDiffTFRosBridge:
 
 Setup
 -----
-If you have followed steps 1., 2., and 3. of the main setup instructions for this repo then nothing further is required.
+If you have followed all steps of the main setup instructions for this repo then nothing further is required. If ROS packages are not updated, here is the instructions for installing the ROS packages required for this translation codelet.
 
 This codelet requires use of the `tf` package not available in the base Isaac installation. If you did not complete step 3. of the main setup instructions you will need to include these packages in your Isaac ROS setup.
 
@@ -106,7 +106,7 @@ For the purpose of this application we simply view the ROS topic output with rvi
 
 We should see a tf visualization with the world, map (gt_robot_init) robot, odom (where robot thinks robot_init is), two cameras, and a lidar.
 
-We have now added functionality for visualizing ground-truth poses of all objects within the scene.
+We have now added functionality for visualizing ground-truth poses of all objects within the scene (requires gt file in appropriate format EXAMPLE TO BE ADDED).
 
 ### WARNING ###
 If you change maps, you will need to update pose initializer information in the app.json.
@@ -114,8 +114,11 @@ If you change maps, you will need to update pose initializer information in the 
 ### GT Object Setup ###
 In order to visualize ground-truth objects as suggested in this app you will need a gt.json file which contains the centroid, label, and extent of each ground-truth object in the scene.
 
-Currently, we supply the gt.json for one of the environments we have created internally.
+We will supply the gt.json for one of the environments we have created internally soon.
 
+The script `gen_challenge_gt.py` can be used with files of full gt poses for all objects to generate the gt.json file (TO BE PROVIDED).
+
+<!---
 To get your own follow the following steps:
 1. Undergo the process for attaining per-frame GT poses for all objects (this should provide not just gt-poses relative to the world but also the camera)
 2. After the above process you should have access to a labels.json file which is the concatenation of all gt_poses for each frame.
@@ -123,7 +126,7 @@ To get your own follow the following steps:
     * Usage `python gen_challenge_gt --full_labels_json <all_labels_file> --save_file <save_filename>`
     where  `<all_labels_file>` is the name of the labels.json file that contains all gt_poses for every frame and `<save_filename>` is the name of the .json file that you want to save the ground-truth to.
     * If there is a class which is not accommodated for in the code, the system will exit with a message.
-
+--->
 
 
 ### Running the App ###
@@ -143,7 +146,7 @@ Terminal 3:
 roscore
 ``` 
 
-Terminal 4 within or referencing object_gt_visualization folder:
+Terminal 4 (optional) within or referencing object_gt_visualization folder:
 ```
 python visualize_gt_rviz.py --gt_file <gt_pose_file> --ros_topic <topic_name> --header_frame <world_frame_name>`
 ```
