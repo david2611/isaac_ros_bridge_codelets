@@ -1,7 +1,5 @@
 #include "ros_bridge_depth_img.hpp"
 
-//#include "engine/core/assert.hpp"
-
 #include "ros/ros.h"
 
 // needed for the image transport specifically
@@ -52,12 +50,17 @@ void DepthImageRosBridge::tick() {
         // convert the Image Proto into a CV Mat
         const size_t rows = depth_image.rows();
         const size_t cols = depth_image.cols();
+        // Use 32FC1 for depth image format
         cv::Mat cv_depth_image = cv::Mat(rows, cols, CV_32FC1,
                         const_cast<void*>(static_cast<const void*>(depth_image.data().pointer())));
         
         sensor_msgs::ImagePtr ros_depth_img_msg = cv_bridge::CvImage(std_msgs::Header(), "32FC1", cv_depth_image).toImageMsg();
-        ros_img_msg->header.stamp = ros_time_now;
-        ros_img_msg->header.frame_id = get_ros_frame_name();
+
+        // Update header information before publishing
+        ros_depth_img_msg->header.stamp = ros_time_now;
+        ros_depth_img_msg->header.frame_id = get_ros_frame_name();
+
+        // publish depth image
         depth_img_data_->pub.publish(ros_depth_img_msg);
 
     }

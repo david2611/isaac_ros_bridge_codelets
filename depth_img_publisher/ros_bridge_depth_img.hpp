@@ -12,9 +12,9 @@ namespace isaac {
 namespace rosbridge {
 namespace opencv{
 
-// This codelet represents a basic bridge to ROS for publishing images.
-// Every time an image is available it will convert it to a CV Mat object and use cv_bridge
-// to publish the Image message to ROS
+// This codelet represents a basic bridge to ROS for publishing depth images.
+// Every time a depth image is available it will convert it to a CV Mat object and 
+// use cv_bridge to publish the message to ROS
 class DepthImageRosBridge : public alice::Codelet {
  public:
   // Explicitly declare constructors and destructors

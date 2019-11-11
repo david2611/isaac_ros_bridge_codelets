@@ -1,32 +1,35 @@
 Image Publisher Translation Codelet
 ====================================
 
-This codelet aims to take colour images from Isaac Sim and translate them to ROS Image Messages published on a ROS topic. 
+This codelet aims to take depth images from Isaac Sim and translate them to ROS Image Messages published on a ROS topic. 
 
 
 Isaac Codelet Name
 ------------------
-`isaac::rosbridge::opencv::ImageRosBridge`
+`isaac::rosbridge::opencv::DepthImageRosBridge`
 
 Input
 -----
-Isaac `ColorCameraProto` received whenever image is taken by simulated camera on a simulated robot in Isaac Sim.
-Proto is received on `rgbCapture_ros` channel.
+Isaac `DepthCameraProto` received whenever image is taken by simulated depth camera on a simulated robot in Isaac Sim.
+Proto is received on `depth_image` channel.
 
 Output
 ------
 ROS Image Message created through use of cv_bridge
+Message is published on the topic defined by `ros_publisher_channel_name`.
 
 Isaac parameters
 ----------------
 
-`publisher_queue_size` - the ROS publisher queue depth
+`ros_publisher_queue_size` - the ROS publisher queue depth (default 1000)
 
-`publisher_channel_name` - name of the ROS topic codelet publishes to
+`ros_publisher_channel_name` - name of the ROS topic codelet publishes to (default "`isaac_depth_image`")
+
+`ros_frame_name` - name of the frame for the depth camera of the robot in ROS. Naming convention currently `<robot_name>_<camera_name>` (default "`robot_left_camera`")
 
 Setup
 -----
-If you have followed steps 1., 2., and 3. of the main setup instructions for this repo then nothing further is required.
+If you have followed all steps of the main setup instructions for this repo then nothing further is required. If ROS packages are not updated, here is the instructions for installing the ROS packages required for this translation codelet.
 
 This codelet requires use of the `cv_bridge` and `image_transport` packages not available in the base Isaac installation. If you did not complete step 3. of the main setup instructions you will need to include these packages in your Isaac ROS setup.
 
@@ -74,7 +77,7 @@ Example App
 -----------
 The example application is built upon the basic carter_sim application where the robot navigates its way around an
 environment autonomously without any other input. Goal locations are generated randomly and obstacle avoidance is autonomous.
-All this application does it take the input from the left camera and publish it along a ROS topic.
+All this application does it take the depth image input from the left camera and publish it along a ROS topic.
 
 For the purpose of this application we simply view the ROS topic output with rqt_image_viewer to confirm this is operating
 as expected. 
@@ -84,13 +87,13 @@ as expected.
 ### Running the App ###
 Terminal 1 within Isaac Sim folder:
 ```
-./Engine/Binaries/Linux/UE4Editor IsaacSimProject CarterWarehouse_P vulkan -isaac_sim_config_json="<isaac_sdk_path>/apps/carter_sim/bridge_config/carter_full.json"
+./Engine/Binaries/Linux/UE4Editor IsaacSimProject CarterWarehouse_P vulkan -isaac_sim_config_json="<isaac_sdk_path>/apps/carter/carter_sim/bridge_config/carter_full.json"
 ```
 where `<isaac_sdk_path>` is the path to your Isaac SDK installation.
 
 Terminal 2 within Isaac SDK folder:  
 ```
-bazel run //isaac_ros_bridge_codelets/img_publisher:carter_sim_ros_img_pub -- --config="apps/assets/maps/carter_warehouse_p.config.json" --graph="apps/assets/maps/carter_warehouse_p.graph.json"
+bazel run //isaac_ros_bridge_codelets/depth_img_publisher:carter_sim_ros_depth_img_pub -- --config="apps/assets/maps/carter_warehouse_p.config.json" --graph="apps/assets/maps/carter_warehouse_p.graph.json"
 ```
 
 Terminal 3:
