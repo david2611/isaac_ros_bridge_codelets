@@ -9,12 +9,6 @@
 #include "cv_bridge/cv_bridge.h"
 #include <sensor_msgs/image_encodings.h>
 
-// not sure why these aren't needed (opencv in particular)
-// #include "opencv2/imgcodecs.hpp"
-// #include "opencv2/imgproc.hpp"
-// #include <sensor_msgs/Image.h>
-// #include <sensor_msgs/image_encodings.h>
-
 namespace isaac {
 namespace rosbridge {
 namespace opencv {
@@ -46,6 +40,8 @@ void DepthImageRosBridge::start() {
 
 void DepthImageRosBridge::tick() {
   if (ros::ok()) {
+    
+    ros::Time ros_time_now = ros::Time::now();
 
     // parse the received messages
     auto proto1 = rx_depth_image().getProto();
@@ -59,9 +55,9 @@ void DepthImageRosBridge::tick() {
         cv::Mat cv_depth_image = cv::Mat(rows, cols, CV_32FC1,
                         const_cast<void*>(static_cast<const void*>(depth_image.data().pointer())));
         
-        // convert cv Mat to  an image pointer message with cv_bridge
-        // need to update the header?
         sensor_msgs::ImagePtr ros_depth_img_msg = cv_bridge::CvImage(std_msgs::Header(), "32FC1", cv_depth_image).toImageMsg();
+        ros_img_msg->header.stamp = ros_time_now;
+        ros_img_msg->header.frame_id = get_ros_frame_name();
         depth_img_data_->pub.publish(ros_depth_img_msg);
 
     }

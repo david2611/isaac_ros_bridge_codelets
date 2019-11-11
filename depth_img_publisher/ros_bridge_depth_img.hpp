@@ -35,6 +35,9 @@ class DepthImageRosBridge : public alice::Codelet {
   // ROS publisher channel. Used to broadcast messages to ROS
   ISAAC_PARAM(std::string, ros_publisher_channel_name, "isaac_depth_image");
 
+  // Name of frame used in ROS (format <robot_name>_<camera_name>)
+  ISAAC_PARAM(std::string, ros_frame_name, "robot_left_camera")
+
  private:
   // Hide the ROS implementation details
   struct RosDepthImageData;
