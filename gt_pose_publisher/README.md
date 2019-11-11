@@ -123,8 +123,7 @@ To get your own follow the following steps:
     * Usage `python gen_challenge_gt --full_labels_json <all_labels_file> --save_file <save_filename>`
     where  `<all_labels_file>` is the name of the labels.json file that contains all gt_poses for every frame and `<save_filename>` is the name of the .json file that you want to save the ground-truth to.
     * If there is a class which is not accommodated for in the code, the system will exit with a message.
-4. Once you have your challenge gt poses simply run `visualize_gt_rviz.py` to enable visualizing gt objects in rviz.
-    * Usage: `python visualize_gt_rviz.py --gt_file <gt_pose_file> --ros_topic <topic_name> --header_frame <world_frame_name>` where `<gt_pose_file>` is the .json output from `gen_challenge_gt.py`, `<topic_name>` is the name of the ros topic that you publish your gt object markers to, and `world_frame_name` is the name of the world frame in ROS that corresponds to the world frame the objects were originally mapped with.
+
 
 
 ### Running the App ###
