@@ -26,7 +26,7 @@ Isaac parameters
 
 Setup
 -----
-If you have followed steps 1. and 2. of the main setup instructions for this repo then nothing further is required.
+If you have followed all steps of the main setup instructions for this repo then nothing further is required.
 
 Example App
 -----------

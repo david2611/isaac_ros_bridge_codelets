@@ -25,7 +25,7 @@ Isaac parameters
 
 Setup
 -----
-If you have followed steps 1., 2., and 3. of the main setup instructions for this repo then nothing further is required.
+If you have followed all steps of the main setup instructions for this repo then nothing further is required. If ROS packages are not updated, here is the instructions for installing the ROS packages required for this translation codelet.
 
 This codelet requires use of the `tf` package not available in the base Isaac installation. If you did not complete step 3. of the main setup instructions you will need to include these packages in your Isaac ROS setup.
 
