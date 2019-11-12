@@ -1,15 +1,17 @@
 Isaac - ROS Translation Codelets
 =================================
 This repo contains codelets created to transfer information between ROS and Isaac. 
-Each folder is self-contained with its own Codelet publishing/subscribing one type of message to/from ROS.
+Each folder is fairly self-contained with its own Codelet publishing/subscribing one type of message to/from ROS.
 Each folder should contain the codelet source code (.hpp and .cpp files) a bazel BUILD file, and an example .app.json file.
-Codelets should be able to work with the base version of ROS that comes with Isaac unless otherwise specified.
-Example apps should provide some meaningful, easily debugged test example that proves translation is working properly. 
+Most codelets work with more than is supplied in the base version of ROS supplied with Isaac and where this occurs is specified.
+Example apps should provide some meaningful, easily debugged test example that proves translation is working properly (note some codelets use other existing translation codelets). 
 
-Note that code here is likely "over-commented" as it was developed whilst learning how Isaac and ROS communicate. 
-It is encouraged that contributors maintain a high-level of commenting and clarity to ensure easy use by others.
+Note that code here was developed whilst learning how Isaac and ROS communicate and may have "unnecessary" comments and general flaws. 
+It is encouraged that contributors maintain a high-level of commenting and clarity to ensure easy use and understanding by others.
 
 **Currently assumes repository is stored in the root Isaac SDK folder. If not see setup.**
+
+**Designed to operate within Isaac SDK 2019.2**
 
 ### Notes for contributors ###
 Anyone who adds a new translation codelet should try to follow the structure of already existing codelets, being sure to
@@ -63,13 +65,13 @@ filegroup(
 ### Update path to codelet sub-folders ###
 If you have not saved the repo your base Isaac SDK folder, you must change the path to the codelet sub-folders in the repo within those sub-folders' .app.json and BUILD files.
 
-For example if ros_bridge_codelets is saved in packages in Isaac SDK folder line 18 of 
+For example if isaac_ros_bridge_codelets is saved in packages in Isaac SDK folder line 18 of 
 img_publisher/carter_sim_ros_img_pub.app.json changes from 
     `"//isaac_ros_bridge_codelets/img_publisher:ros_img_pub_components"` 
     to
     `"//packages/isaac_ros_bridge_codelets/img_publisher:ros_img_pub_components"`
     
-### (Optional) Update ROS Packages ###
+### (Potentially Optional) Update ROS Packages ###
 Most codelets require changing the base ROS packages available to Isaac. 
 If different packages are required the specific requirements will be outlined for that specific codelet.
 To have the ros package requirements required for all translation codelets used so far do the following:
