@@ -8,17 +8,17 @@
 namespace isaac {
 namespace rosbridge{
 
-class LidarPublisher : public isaac::alice::Codelet {
+class LidarRosBridge : public isaac::alice::Codelet {
  public:
-  LidarPublisher() {}
-  virtual ~LidarPublisher() {}
+  LidarRosBridge() {}
+  virtual ~LidarRosBridge() {}
 
   void start() override;
   void stop() override;
   void tick() override;
 
-  ISAAC_PARAM(std::string, lidar_channel_name, "/scan_laser");
-  ISAAC_PARAM(std::string, lidar_frame_name, "lidar");
+  ISAAC_PARAM(std::string, lidar_ros_topic_name, "/scan_laser");
+  ISAAC_PARAM(std::string, lidar_ros_frame_name, "lidar");
 
   ISAAC_PROTO_RX(FlatscanProto, lidar_scan);
 
@@ -30,4 +30,4 @@ class LidarPublisher : public isaac::alice::Codelet {
 }  // namespace rosbridge
 }  // namespace benchbot
 
-ISAAC_ALICE_REGISTER_CODELET(isaac::rosbridge::LidarPublisher);
+ISAAC_ALICE_REGISTER_CODELET(isaac::rosbridge::LidarRosBridge);
