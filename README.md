@@ -70,7 +70,7 @@ img_publisher/carter_sim_ros_img_pub.app.json changes from
     `"//packages/isaac_ros_bridge_codelets/img_publisher:ros_img_pub_components"`
     
 ### (Optional) Update ROS Packages ###
-Most codelets should not require changing the base ROS packages available to Isaac. 
+Most codelets require changing the base ROS packages available to Isaac. 
 If different packages are required the specific requirements will be outlined for that specific codelet.
 To have the ros package requirements required for all translation codelets used so far do the following:
 
@@ -120,8 +120,78 @@ to read:
 Current Translation Codelets
 ============================
 Each folder's content relates to a different translation codelet. Here should be a brief high-level description of the 
-codelet. Further information should be provided in separate README for the codelet.
+codelet. Further information should be provided in separate README for the codelet containing all parameters that can and would be changed for varying configurations.
 Example App code assumes default storage location for this repository and Isaac Sim setup completed.
+
+depth_img_publisher
+-------------
+**Purpose:** Enable Depth images from Isaac Sim to be published as ROS Image messages.
+
+**Message Conversion:**  Isaac DepthCameraProto -> ROS Image Message
+
+**Running Example App:**
+
+Terminal 1 within Isaac Sim folder:
+```
+./Engine/Binaries/Linux/UE4Editor IsaacSimProject CarterWarehouse_P vulkan -isaac_sim_config_json="<isaac_sdk_path>/apps/carter/carter_sim/bridge_config/carter_full.json"
+```
+where `<isaac_sdk_path>` is the path to your Isaac SDK installation.
+
+Terminal 2 within Isaac sdk folder:  
+```
+bazel run //isaac_ros_bridge_codelets/depth_img_publisher:carter_sim_ros_depth_img_pub -- --config="apps/assets/maps/carter_warehouse_p.config.json" --graph="apps/assets/maps/carter_warehouse_p.graph.json"
+```
+Terminal 3:
+```
+roscore
+```
+
+Terminal 4:
+```
+rqt_image_view
+```
+
+**Extra ROS Requirements:**  `cv_bridge` and  `image_transport` packages
+
+gt_pose_publisher
+------------------
+**Purpose:** Transmit the ground-truth pose information form Isaac simulator to ROS. Sends the difference between estimated and true robot pose alongside ground-truth world and odom pose.
+
+**Message Conversion:**  Isaac RigidBody3Proto and Pose3d -> ROS geometry_msgs::TransformStamped messages
+
+**Running Example App:**
+
+Terminal 1 within Isaac Sim folder:
+```
+./Engine/Binaries/Linux/UE4Editor IsaacSimProject CarterWarehouse_P vulkan -isaac_sim_config_json="<isaac_sdk_path>/apps/carter/carter_sim/bridge_config/carter_full.json"
+```
+where `<isaac_sdk_path>` is the path to your Isaac SDK installation.
+
+Terminal 2 within Isaac SDK folder:  
+```
+bazel run //isaac_ros_bridge_codelets/gt_pose_publisher:carter_sim_ros_gt_pose_pub -- --config="apps/assets/maps/carter_warehouse_p.config.json" --graph="apps/assets/maps/carter_warehouse_p.graph.json"
+```
+
+Terminal 3:
+```
+roscore
+``` 
+
+Terminal 4 (optional) within or referencing object_gt_visualization folder:
+```
+python visualize_gt_rviz.py --gt_file <gt_pose_file> --ros_topic <topic_name> --header_frame <world_frame_name>`
+```
+
+ where `<gt_pose_file>` is the .json output from `gen_challenge_gt.py`, `<topic_name>` is the name of the ros topic that you publish your gt object markers to, and `world_frame_name` is the name of the world frame in ROS that corresponds to the world frame the objects were originally mapped with.
+
+Terminal 5:
+```
+rviz
+``` 
+ 
+ Note, you will need to move the robot with the joystick through Isaac and set up RViz appropriately to view all the components. Current version uses odom_publisher as well
+
+**Extra ROS Requirements:**  `tf` package
 
 img_publisher
 -------------
@@ -152,6 +222,39 @@ rqt_image_view
 ```
 
 **Extra ROS Requirements:**  `cv_bridge` and  `image_transport` packages
+
+lidar_publisher
+------------------
+**Purpose:** Transmit lidar information form Isaac to ROS.
+
+**Message Conversion:**  Isaac FlatscanProto -> ROS sensor_msgs::Laserscan messages
+
+**Running Example App:**
+
+Terminal 1 within Isaac Sim folder:
+```
+./Engine/Binaries/Linux/UE4Editor IsaacSimProject CarterWarehouse_P vulkan -isaac_sim_config_json="<isaac_sdk_path>/apps/carter/carter_sim/bridge_config/carter_full.json"
+```
+where `<isaac_sdk_path>` is the path to your Isaac SDK installation.
+
+Terminal 2 within Isaac SDK folder:  
+```
+bazel run //isaac_ros_bridge_codelets/lidar_publisher:carter_sim_ros_lidar_pub -- --config="apps/assets/maps/carter_warehouse_p.config.json" --graph="apps/assets/maps/carter_warehouse_p.graph.json"
+```
+
+Terminal 3:
+```
+roscore
+``` 
+
+Terminal 4:
+```
+rviz
+```
+
+With rviz running, set the fixed frame to "odom", visualize the transform by adding tf, and visualize the laser scan by adding LaserScan.
+
+**Extra ROS Requirements:**  `tf` package (only for the example app)
 
 odom_publisher
 ------------------

@@ -32,7 +32,7 @@ Isaac parameters
 
 Setup
 -----
-If you have followed steps 1., 2., and 3. of the main setup instructions for this repo then nothing further is required.
+If you have followed all steps of the main setup instructions for this repo then nothing further is required. If ROS packages are not updated, here is the instructions for installing the ROS packages required for this translation codelet.
 
 This codelet requires use of the `tf` package not available in the base Isaac installation. If you did not complete step 3. of the main setup instructions you will need to include these packages in your Isaac ROS setup.
 
@@ -87,7 +87,7 @@ For the purpose of this application we simply view the ROS topic output with ros
 ### Running the App ###
 Terminal 1 within Isaac Sim folder:
 ```
-./Engine/Binaries/Linux/UE4Editor IsaacSimProject CarterWarehouse_P vulkan -isaac_sim_config_json="<isaac_sdk_path>/apps/carter_sim/bridge_config/carter_full.json"
+./Engine/Binaries/Linux/UE4Editor IsaacSimProject CarterWarehouse_P vulkan -isaac_sim_config_json="<isaac_sdk_path>/apps/carter/carter_sim/bridge_config/carter_full.json"
 ```
 where `<isaac_sdk_path>` is the path to your Isaac SDK installation.
 
