@@ -13,6 +13,9 @@ It is encouraged that contributors maintain a high-level of commenting and clari
 
 **Designed to operate within Isaac SDK 2019.2**
 
+### Related Project ###
+This repo shows early work associated with the Australian Centre for Robotic Vision (ACRV) Scene Understanding Robotic Vision Challenges. For more details on these challenges please go to the following website (https://nikosuenderhauf.github.io/roboticvisionchallenges/scene-understanding)
+
 ### Notes for contributors ###
 Anyone who adds a new translation codelet should try to follow the structure of already existing codelets, being sure to
 provide an example app that demonstrates the codelet and provide appropriate commenting.
