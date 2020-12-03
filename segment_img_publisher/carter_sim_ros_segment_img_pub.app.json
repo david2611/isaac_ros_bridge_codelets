@@ -1,0 +1,45 @@
+{
+    "name": "carter_sim",
+    "config_files": [
+        "apps/carter/carter_sim/navigation.config.json",
+        "apps/carter/carter_sim/carter.config.json"
+    ],
+    "graph_files": [
+        "apps/carter/carter_sim/navigation.graph.json",
+        "apps/carter/carter_sim/carter.graph.json"
+
+    ],
+    "modules": [
+        "map",
+        "navigation",
+        "perception",
+        "planner",
+        "viewers",
+        "flatsim",
+        "//isaac_ros_bridge_codelets/segment_img_publisher:ros_segment_img_pub_components"
+    ],
+    "config": {},
+    "graph": {
+        "nodes": [{
+            "name": "left_cam_segment_img_bridge",
+            "components": [{
+                    "name": "message_ledger",
+                    "type": "isaac::alice::MessageLedger"
+                },
+                {
+                    "name": "segment_img_bridge",
+                    "type": "isaac::rosbridge::opencv::SegmentImageRosBridge"
+                }
+            ]
+        }],
+        "edges": [{
+                "source": "control/isaac.planner.DifferentialBaseControl/cmd",
+                "target": "base_simulation/isaac.flatsim.DifferentialBaseSimulator/diff_base_command"
+            },
+            {
+                "source": "LeftCameraSubscriber/isaac.alice.TcpSubscriber/SegmentationSensor",
+                "target": "left_cam_segment_img_bridge/segment_img_bridge/segment_image"
+            }
+        ]
+    }
+}
